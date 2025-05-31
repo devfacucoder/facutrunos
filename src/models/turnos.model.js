@@ -13,8 +13,8 @@ const turnosSchema = new Schema({
     type: String,
     required: true,
     validate: {
-      validator: (v) => /^\d{2}\/\d{2}\/\d{4}$/.test(v), // formato DD/MM/YYYY
-      message: "La fecha debe tener el formato DD/MM/YYYY",
+      validator: (v) => /^\d{4}-\d{2}-\d{2}$/.test(v), // formato YYYY-MM-DD
+      message: "La fecha debe tener el formato YYYY-MM-DD",
     },
   },
   medico: {
