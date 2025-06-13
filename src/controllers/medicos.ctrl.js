@@ -190,3 +190,47 @@ export const deleteMedico = async (req, res) => {
     res.status(500).json({ message: "Error interno del servidor" });
   }
 };
+
+
+export const editMedico = async (req, res) => {
+  try {
+    const { idmedico } = req.params;
+    const { nombreMedico, apellidoMedico, password, tipoDeMedico } = req.body;
+
+    const medico = await User.findById(idmedico);
+
+    if (!medico) {
+      return res.status(404).json({ message: "Médico no encontrado" });
+    }
+
+    if (medico.tipoDeMedico === "") {
+      return res.status(400).json({ message: "Este usuario no es un médico" });
+    }
+
+    // Si se quiere cambiar la especialidad, validar que exista
+    if (tipoDeMedico) {
+      const espValida = especializaciones.find(e => e === tipoDeMedico);
+      if (!espValida) {
+        return res.status(400).json({ message: "Especialidad no válida" });
+      }
+      medico.tipoDeMedico = tipoDeMedico;
+    }
+
+    if (nombreMedico) medico.nombre = nombreMedico;
+    if (apellidoMedico) medico.apellido = apellidoMedico;
+    if (password) {
+      medico.password = await User.enCryptPassword(password);
+    }
+
+    const medicoActualizado = await medico.save();
+
+    res.status(200).json({
+      message: "Médico actualizado correctamente",
+      objMedico: medicoActualizado,
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+};

@@ -1,6 +1,19 @@
 import Turnos from "../models/turnos.model.js";
 import User from "../models/user.model.js";
 
+export const getAllTurnos = async (req, res) => {
+  try {
+    const turnosDB = await Turnos.find();
+
+    res
+      .status(200)
+      .json({ message: "Lista de todos los turnos", objLista: turnosDB });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error al reservar el turno" });
+  }
+};
+
 export const reservarTurno = async (req, res) => {
   try {
     const {
